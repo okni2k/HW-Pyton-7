@@ -1,0 +1,47 @@
+import requests
+
+API_KEY = "f053997b59ec957c13890e8b03c82ca9"
+
+# Запрашиваем название города
+city_name = input("Введите название города: ").strip()
+
+if not city_name:
+    print("Название города не может быть пустым!")
+else:
+    # Формируем URL запроса
+    base_url = "https://api.openweathermap.org/data/2.5/weather"
+    params = {
+        "q": city_name,
+        "appid": API_KEY,
+        "units": "metric",  # Температура в Цельсиях
+        "lang": "ru"  # Ответ на русском
+    }
+    
+    # Выполняем запрос
+    response = requests.get(base_url, params=params)
+    
+    # Проверяем результат
+    if response.status_code == 200:
+        weather_data = response.json()
+        
+        # Извлекаем нужную информацию
+        temperature = weather_data['main']['temp']
+        description = weather_data['weather'][0]['description']
+        city = weather_data['name']
+        country = weather_data['sys']['country']
+        
+        # Выводим результат
+        print("\n" + "=" * 60)
+        print(f" ПОГОДА В ГОРОДЕ {city.upper()}, {country}")
+        print("=" * 60)
+        print(f" Температура: {temperature}°C")
+        print(f" Описание: {description.capitalize()}")
+        print("=" * 60)
+        
+    elif response.status_code == 404:
+        print(f"Город '{city_name}' не найден. Проверьте название.")
+    elif response.status_code == 401:
+        print("Ошибка: неверный API-ключ. Проверьте значение API_KEY.")
+    else:
+        print(f"Ошибка: {response.status_code}")
+        print(f"Сообщение: {response.text}")

@@ -1,0 +1,20 @@
+# Базовый URL API
+base_url = "https://jsonplaceholder.typicode.com"
+
+# Выполняем GET-запрос к /posts
+response = requests.get(f"{base_url}/posts")
+
+# Проверяем статус ответа
+if response.status_code == 200:
+    posts = response.json()
+    
+    # Извлекаем и выводим первые 5 постов
+    
+    print("ПЕРВЫЕ 5 ПОСТОВ")
+    
+    for i, post in enumerate(posts[:5], 1):
+        print(f"\n Пост {i}")
+        print(f"Заголовок: {post['title']}")
+        print(f"Текст: {post['body']}")
+else:
+    print(f"Ошибка: {response.status_code}")
